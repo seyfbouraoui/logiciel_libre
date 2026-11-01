@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logiciels libres et open source – L1 Géophysique</title>
+<style>
+  :root{
+    --bg:#f6f7f4; --card:#ffffff; --ink:#1d2a24; --muted:#5b6b63;
+    --accent:#1f7a5a; --accent-soft:#e2f2eb; --line:#dde3de; --warn:#b4571b;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#121815; --card:#1b2420; --ink:#e8efe9; --muted:#9fb0a6;
+      --accent:#4cc79a; --accent-soft:#1f3a2f; --line:#2c3a33; --warn:#e8935a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Naskh Arabic","Noto Sans Arabic",Tahoma,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6}
+  header{background:var(--accent);color:#fff;padding:28px 20px}
+  header .wrap{max-width:900px;margin:0 auto}
+  .topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .dept{font-size:.95rem;opacity:.95}
+  .dept b{display:block;font-size:1.05rem}
+  .langs{display:flex;gap:6px}
+  .langs button{border:1px solid rgba(255,255,255,.7);background:transparent;color:#fff;border-radius:999px;
+    padding:4px 14px;cursor:pointer;font:inherit;font-size:.9rem}
+  .langs button.active{background:#fff;color:var(--accent);font-weight:700}
+  header h1{margin:0 0 6px;font-size:1.7rem}
+  header p{margin:0;opacity:.92}
+  nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);z-index:5}
+  nav .wrap{max-width:900px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:6px 12px}
+  nav button{border:0;background:none;color:var(--muted);padding:10px 14px;cursor:pointer;
+    font:inherit;border-radius:8px;white-space:nowrap}
+  nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  main{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+  section{display:none} section.active{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  h2{margin:8px 0 12px} h3{margin:0 0 6px}
+  table{width:100%;border-collapse:collapse;font-size:.95rem}
+  th,td{text-align:start;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;width:28%}
+  .week{border:1px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:10px;overflow:hidden}
+  .week summary{cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:center;list-style:none}
+  .week summary::-webkit-details-marker{display:none}
+  .num{background:var(--accent);color:#fff;border-radius:50%;width:34px;height:34px;
+    display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+  .week.done .num{background:var(--muted)}
+  .week .body{padding:0 16px 16px;padding-inline-start:62px}
+  .tag{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;
+    padding:2px 10px;font-size:.8rem;margin:2px 4px 2px 0;margin-inline:0 4px}
+  label.check{display:flex;gap:8px;align-items:center;margin-top:10px;color:var(--muted);cursor:pointer}
+  .bar{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:8px}
+  .bar>div{height:100%;background:var(--accent);width:0;transition:width .3s}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+  .tool{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--card)}
+  .tool b{display:block}
+  .tool small{color:var(--muted)}
+  input[type=search],input[type=number]{font:inherit;padding:8px 10px;border:1px solid var(--line);
+    border-radius:8px;background:var(--card);color:var(--ink)}
+  input[type=search]{width:100%;margin-bottom:12px}
+  input[type=number]{width:90px}
+  .calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;
+    border-bottom:1px solid var(--line)}
+  .result{font-size:1.6rem;font-weight:700;color:var(--accent)}
+  .note{color:var(--muted);font-size:.9rem}
+  .quiz button.opt{display:block;width:100%;text-align:start;margin:6px 0;padding:10px 12px;font:inherit;
+    border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);cursor:pointer}
+  .quiz button.opt.ok{border-color:var(--accent);background:var(--accent-soft)}
+  .quiz button.opt.ko{border-color:var(--warn)}
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 16px;font:inherit;cursor:pointer;margin-top:8px}
+  footer{text-align:center;color:var(--muted);font-size:.9rem;padding:24px 16px;border-top:1px solid var(--line)}
+  footer b{color:var(--ink)}
+  [dir=rtl] ul,[dir=rtl] ol{padding-inline-start:24px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="topline">
+      <div class="dept"><b id="dept"></b><span id="author"></span></div>
+      <div class="langs" id="langs" role="group" aria-label="Language">
+        <button data-l="fr">Français</button>
+        <button data-l="en">English</button>
+        <button data-l="ar">العربية</button>
+      </div>
+    </div>
+    <h1 id="title"></h1>
+    <p id="subtitle"></p>
+  </div>
+</header>
+
+<nav><div class="wrap" id="tabs"></div></nav>
+
+<main>
+  <section id="presentation">
+    <h2 id="h-pres"></h2>
+    <div class="card"><p id="pres-intro"></p><table id="pres-table"></table></div>
+    <div class="card"><h3 id="h-obj"></h3><ol id="objectifs"></ol></div>
+    <div class="card"><h3 id="h-prog"></h3><div id="progress-text" class="note"></div><div class="bar"><div id="progress-bar"></div></div></div>
+  </section>
+
+  <section id="seances">
+    <h2 id="h-plan"></h2>
+    <p class="note" id="plan-hint"></p>
+    <div id="weeks"></div>
+    <div class="card"><h3 id="h-trame"></h3><p id="trame"></p></div>
+  </section>
+
+  <section id="outils">
+    <h2 id="h-tools"></h2>
+    <input type="search" id="search">
+    <div class="grid" id="tools"></div>
+    <p class="note" id="tools-note"></p>
+  </section>
+
+  <section id="evaluation">
+    <h2 id="h-eval"></h2>
+    <div class="card">
+      <p class="note" id="calc-hint"></p>
+      <div id="calc"></div>
+      <div class="calc-row"><b id="final-label"></b><span class="result" id="final">0.00 / 20</span></div>
+    </div>
+    <div class="card"><h3 id="h-proj"></h3><p id="proj"></p><h3 id="h-rules"></h3><p id="rules"></p></div>
+  </section>
+
+  <section id="quiz">
+    <h2 id="h-quiz"></h2>
+    <div class="card quiz" id="quizbox"></div>
+  </section>
+
+  <section id="organisation">
+    <h2 id="h-org"></h2>
+    <div class="card"><ul id="org-list"></ul></div>
+    <div class="card"><h3 id="h-res"></h3><ul id="res-list"></ul><p class="note" id="res-note"></p></div>
+  </section>
+</main>
+
+<footer>
+  <div id="sign"></div>
+  <div class="note" id="license"></div>
+</footer>
+
+<script>
+/* ======================= Contenu trilingue ======================= */
+const I18N = {
+fr:{
+  dir:"ltr", lang:"fr", docTitle:"Logiciels libres et open source – L1 Géophysique",
+  dept:"Département de Géophysique", author:"Dr Bouraoui Seyfallah",
+  title:"Logiciels libres et open source",
+  subtitle:"Cours à distance – L1 Géophysique – 8 semaines, environ 4 h par semaine",
+  tabs:["Présentation","Séances","Outils","Évaluation","Quiz","Organisation"],
+  hPres:"Présentation du cours",
+  presIntro:"Ce cours apprend aux étudiants de L1 géophysique à travailler avec des logiciels libres, de l'installation d'un outil au traitement d'un jeu de données géophysiques simple. Aucun prérequis en programmation.",
+  presTable:[["Durée","8 semaines : 1 h de visio + 3 h de travail personnel par semaine"],["Mode","Visioconférence, plateforme de cours (Moodle ou Google Classroom), forum de questions"],["Matériel","Un ordinateur (Windows, macOS ou Linux), 4 Go de RAM minimum, connexion internet"],["Langues","Français, anglais et arabe"]],
+  hObj:"Objectifs d'apprentissage",
+  obj:["Expliquer ce qu'est un logiciel libre et open source, et distinguer les grandes licences (GPL, MIT, Creative Commons).","Installer et utiliser des outils libres de bureautique et de gestion bibliographique (LibreOffice, Zotero).","Manipuler des données avec Python et Jupyter (lecture d'un fichier, calcul, graphique).","Visualiser des données géographiques et géophysiques avec QGIS.","Utiliser Git et GitHub pour sauvegarder et partager un travail.","Citer et réutiliser correctement un code ou des données libres."],
+  hProg:"Ta progression",
+  progress:(n,t)=>`${n} séance${n>1?"s":""} terminée${n>1?"s":""} sur ${t}`,
+  hPlan:"Plan des 8 séances",
+  planHint:"Clique sur une séance pour la déplier, et coche-la quand tu l'as terminée. Ta progression est enregistrée dans ton navigateur.",
+  toRender:"À rendre :", done:"Séance terminée",
+  hTrame:"Trame d'une visio d'une heure",
+  trame:"10 min de rappel et questions, 30 min de démonstration en direct, 15 min d'exercice guidé en petits groupes, 5 min de consignes pour la semaine. Chaque visio est enregistrée et mise en ligne.",
+  weeks:[
+   {t:"Comprendre le libre",c:"Les 4 libertés du logiciel libre, histoire (GNU, Linux), open source vs propriétaire, licences (GPL, MIT, Creative Commons), exemples en sciences de la Terre.",o:["Navigateur","Forum du cours"],a:"Quiz + courte fiche : choisir un logiciel libre et résumer sa licence."},
+   {t:"Poste de travail libre",c:"Installer et configurer son environnement, découvrir Linux (machine virtuelle ou WSL), notions de fichiers et de terminal.",o:["VirtualBox ou WSL","LibreOffice","Zotero"],a:"Rapport de 1 page sous LibreOffice avec 3 références Zotero."},
+   {t:"Python, premiers pas",c:"Variables, listes, boucles, fonctions, lecture d'un fichier texte.",o:["Python","Jupyter Notebook","Google Colab"],a:"Notebook : statistiques simples sur un fichier de températures ou de magnitudes."},
+   {t:"Analyse et graphiques",c:"Tableaux de données, tracé de courbes, histogrammes, mise en forme.",o:["NumPy","Pandas","Matplotlib"],a:"Graphique d'un profil de données géophysiques (gravimétrie ou topographie)."},
+   {t:"Cartes et SIG",c:"Coordonnées et projections, import de couches, cartes de séismes et de sites.",o:["QGIS","Natural Earth","USGS"],a:"Carte de la sismicité de l'Algérie du Nord à partir d'un catalogue libre."},
+   {t:"Sismologie libre",c:"Lire une trace sismique, filtrer, repérer les arrivées P et S.",o:["ObsPy","SeisComP (présentation)"],a:"Traitement d'un enregistrement sismique public et identification des phases."},
+   {t:"Travailler en équipe",c:"Contrôle de version avec Git, dépôt GitHub, licence d'un projet, bonnes pratiques de citation.",o:["Git","GitHub ou GitLab"],a:"Dépôt GitHub du mini-projet avec un README et une licence."},
+   {t:"Mini-projet et bilan",c:"Présentation orale du mini-projet, retours des pairs, perspectives (science ouverte, données ouvertes).",o:["Tout ce qui précède"],a:"Mini-projet final et présentation de 5 minutes."}
+  ],
+  hTools:"Outils libres recommandés", searchPh:"Rechercher un outil (par exemple : carte, Python, sismologie)",
+  replaces:"Remplace :", noTool:"Aucun outil trouvé.",
+  toolsNote:"Les outils de géophysique avancée (SimPEG, Harmonica, GMT) sont seulement présentés en démonstration.",
+  tools:[
+   ["LibreOffice","Bureautique","Microsoft Office"],["Zotero","Références bibliographiques","EndNote"],
+   ["Python + Jupyter","Programmation et calcul","MATLAB (usage de base)"],["NumPy, Pandas, Matplotlib","Données et graphiques","Excel, Origin"],
+   ["QGIS","Système d'information géographique, cartes","ArcGIS"],["ObsPy, SeisComP","Sismologie","Logiciels commerciaux de traitement sismique"],
+   ["GMT / PyGMT","Cartes et figures scientifiques","Surfer"],["SimPEG, Harmonica","Gravimétrie et magnétisme (Python)","Oasis montaj"],
+   ["Git, GitHub, GitLab","Versions et partage de code","Dossiers partagés"],["LaTeX / Overleaf","Rédaction scientifique","Word pour les formules"]
+  ],
+  hEval:"Évaluation et barème", calcHint:"Entre tes notes (sur 20 pour chaque élément) pour estimer ta note finale.",
+  gradeItems:["Quiz et exercices hebdomadaires","Participation","Mini-projet final","Présentation orale"],
+  points:"points", finalLabel:"Note finale estimée",
+  hProj:"Mini-projet : exemple de sujet",
+  proj:"Récupérer le catalogue des séismes d'une région sur le site de l'USGS, tracer la répartition par magnitude et par profondeur, produire une carte avec QGIS, puis déposer le tout sur GitHub avec un README et une licence au choix.",
+  hRules:"Règles",
+  rules:"Le travail est individuel, ou en binôme pour le mini-projet. Toute réutilisation de code ou de données doit être citée. Un dépôt tardif de 48 h est toléré sans pénalité si l'étudiant prévient sur le forum.",
+  hQuiz:"Quiz de la semaine 1", qOf:(i,n)=>`Question ${i} sur ${n}`, next:"Suivant", finished:"Terminé",
+  yourScore:"Ton score :", again:"Recommencer",
+  quiz:[
+   {q:"Laquelle de ces libertés fait partie des 4 libertés du logiciel libre ?",o:["Utiliser le logiciel gratuitement uniquement","Étudier et modifier le code source","Vendre le logiciel sans citer l'auteur","Interdire la copie par les autres"],a:1,e:"Le code source doit être accessible pour être étudié et modifié."},
+   {q:"Quelle licence autorise la réutilisation très libre avec seulement la mention de l'auteur ?",o:["Licence MIT","Licence propriétaire","Tous droits réservés","Licence d'essai"],a:0,e:"La licence MIT est très permissive."},
+   {q:"QGIS sert principalement à :",o:["Rédiger des documents","Visualiser et analyser des données géographiques","Compresser des vidéos","Gérer des e-mails"],a:1,e:"QGIS est un système d'information géographique libre."},
+   {q:"« Open source » signifie que :",o:["Le logiciel est toujours gratuit","Le code source est consultable selon une licence","Le logiciel n'a aucun auteur","Il est interdit de le modifier"],a:1,e:"Gratuit n'est pas synonyme d'open source : c'est la licence qui compte."}
+  ],
+  hOrg:"Organisation à distance et ressources",
+  org:["<b>Plateforme</b> : un espace de cours unique (Moodle, ou à défaut Google Classroom) avec calendrier, supports et dépôts.","<b>Visioconférence</b> : Google Meet, Zoom ou BigBlueButton (libre), séances enregistrées et mises en ligne sous 24 h.","<b>Faible connexion</b> : supports en PDF légers, notebooks à télécharger, Google Colab pour éviter les installations lourdes.","<b>Communication</b> : un forum du cours et une permanence en ligne d'une heure par semaine.","<b>Aide aux débutants</b> : guide d'installation pas à pas en semaine 2, binôme « tuteur » pour les étudiants en difficulté."],
+  hRes:"Ressources gratuites",
+  res:["Documentation officielle de Python (python.org)","QGIS : documentation et tutoriels sur qgis.org","ObsPy : tutoriels sur docs.obspy.org","Git et GitHub : guide « GitHub Skills »","Données ouvertes : catalogue de séismes de l'USGS, Natural Earth, portail IRIS"],
+  resNote:"Les liens exacts sont à vérifier avant le début du cours.",
+  sign:"Département de Géophysique – Dr Bouraoui Seyfallah", license:"Cours sous licence libre – à adapter et à partager."
+},
+en:{
+  dir:"ltr", lang:"en", docTitle:"Free and Open Source Software – L1 Geophysics",
+  dept:"Department of Geophysics", author:"Dr. Bouraoui Seyfallah",
+  title:"Free and Open Source Software",
+  subtitle:"Distance course – L1 Geophysics – 8 weeks, about 4 hours per week",
+  tabs:["Overview","Sessions","Tools","Assessment","Quiz","Organisation"],
+  hPres:"Course overview",
+  presIntro:"This course teaches first-year geophysics students to work with free software, from installing a tool to processing a simple geophysical dataset. No programming background is required.",
+  presTable:[["Duration","8 weeks: 1 h live video session + 3 h of independent work per week"],["Format","Video conferencing, course platform (Moodle or Google Classroom), discussion forum"],["Equipment","A computer (Windows, macOS or Linux), at least 4 GB of RAM, internet connection"],["Languages","French, English and Arabic"]],
+  hObj:"Learning objectives",
+  obj:["Explain what free and open source software is and tell the main licences apart (GPL, MIT, Creative Commons).","Install and use free office and reference-management tools (LibreOffice, Zotero).","Handle data with Python and Jupyter (reading a file, computing, plotting).","Visualise geographic and geophysical data with QGIS.","Use Git and GitHub to back up and share work.","Properly cite and reuse free code and data."],
+  hProg:"Your progress",
+  progress:(n,t)=>`${n} of ${t} sessions completed`,
+  hPlan:"The 8 sessions",
+  planHint:"Click a session to expand it and tick it when you have finished. Your progress is saved in your browser.",
+  toRender:"Deliverable:", done:"Session completed",
+  hTrame:"Outline of a one-hour live session",
+  trame:"10 min recap and questions, 30 min live demonstration, 15 min guided exercise in small groups, 5 min of instructions for the week. Every session is recorded and posted online.",
+  weeks:[
+   {t:"Understanding free software",c:"The 4 freedoms of free software, history (GNU, Linux), open source vs proprietary, licences (GPL, MIT, Creative Commons), examples from Earth sciences.",o:["Web browser","Course forum"],a:"Quiz + short sheet: choose a free program and summarise its licence."},
+   {t:"A free workstation",c:"Install and set up your environment, discover Linux (virtual machine or WSL), files and terminal basics.",o:["VirtualBox or WSL","LibreOffice","Zotero"],a:"One-page report in LibreOffice with 3 Zotero references."},
+   {t:"Python: first steps",c:"Variables, lists, loops, functions, reading a text file.",o:["Python","Jupyter Notebook","Google Colab"],a:"Notebook: simple statistics on a temperature or magnitude file."},
+   {t:"Data analysis and plots",c:"Data tables, plotting curves, histograms, formatting.",o:["NumPy","Pandas","Matplotlib"],a:"Plot of a geophysical data profile (gravity or topography)."},
+   {t:"Maps and GIS",c:"Coordinates and projections, importing layers, maps of earthquakes and sites.",o:["QGIS","Natural Earth","USGS"],a:"Seismicity map of northern Algeria from a free catalogue."},
+   {t:"Free seismology",c:"Reading a seismic trace, filtering, picking P and S arrivals.",o:["ObsPy","SeisComP (overview)"],a:"Processing a public seismic recording and identifying the phases."},
+   {t:"Working as a team",c:"Version control with Git, GitHub repository, project licence, good citation practice.",o:["Git","GitHub or GitLab"],a:"GitHub repository for the mini-project with a README and a licence."},
+   {t:"Mini-project and wrap-up",c:"Oral presentation of the mini-project, peer feedback, outlook (open science, open data).",o:["Everything above"],a:"Final mini-project and a 5-minute presentation."}
+  ],
+  hTools:"Recommended free tools", searchPh:"Search for a tool (for example: map, Python, seismology)",
+  replaces:"Replaces:", noTool:"No tool found.",
+  toolsNote:"Advanced geophysics tools (SimPEG, Harmonica, GMT) are shown in demonstrations only.",
+  tools:[
+   ["LibreOffice","Office suite","Microsoft Office"],["Zotero","Reference management","EndNote"],
+   ["Python + Jupyter","Programming and computing","MATLAB (basic use)"],["NumPy, Pandas, Matplotlib","Data and plots","Excel, Origin"],
+   ["QGIS","Geographic information system, maps","ArcGIS"],["ObsPy, SeisComP","Seismology","Commercial seismic processing software"],
+   ["GMT / PyGMT","Maps and scientific figures","Surfer"],["SimPEG, Harmonica","Gravity and magnetics (Python)","Oasis montaj"],
+   ["Git, GitHub, GitLab","Version control and code sharing","Shared folders"],["LaTeX / Overleaf","Scientific writing","Word for equations"]
+  ],
+  hEval:"Assessment and grading", calcHint:"Enter your marks (out of 20 for each item) to estimate your final grade.",
+  gradeItems:["Weekly quizzes and exercises","Participation","Final mini-project","Oral presentation"],
+  points:"points", finalLabel:"Estimated final grade",
+  hProj:"Mini-project: example topic",
+  proj:"Download the earthquake catalogue of a region from the USGS website, plot the distribution by magnitude and depth, produce a map with QGIS, then upload everything to GitHub with a README and a licence of your choice.",
+  hRules:"Rules",
+  rules:"Work is individual, or in pairs for the mini-project. Any reuse of code or data must be cited. A late submission of up to 48 hours is accepted without penalty if the student informs the forum.",
+  hQuiz:"Week 1 quiz", qOf:(i,n)=>`Question ${i} of ${n}`, next:"Next", finished:"Finished",
+  yourScore:"Your score:", again:"Start again",
+  quiz:[
+   {q:"Which of these is one of the 4 freedoms of free software?",o:["Use the software for free only","Study and modify the source code","Sell the software without crediting the author","Forbid others from copying it"],a:1,e:"The source code must be accessible so it can be studied and modified."},
+   {q:"Which licence allows very free reuse with only credit to the author?",o:["MIT licence","Proprietary licence","All rights reserved","Trial licence"],a:0,e:"The MIT licence is very permissive."},
+   {q:"QGIS is mainly used to:",o:["Write documents","Visualise and analyse geographic data","Compress videos","Manage e-mails"],a:1,e:"QGIS is a free geographic information system."},
+   {q:"\"Open source\" means that:",o:["The software is always free of charge","The source code can be inspected under a licence","The software has no author","Modifying it is forbidden"],a:1,e:"Free of charge is not the same as open source: the licence is what counts."}
+  ],
+  hOrg:"Remote organisation and resources",
+  org:["<b>Platform</b>: a single course space (Moodle, or Google Classroom otherwise) with calendar, materials and submissions.","<b>Video conferencing</b>: Google Meet, Zoom or BigBlueButton (open source); sessions recorded and posted within 24 h.","<b>Low bandwidth</b>: lightweight PDF handouts, downloadable notebooks, Google Colab to avoid heavy installations.","<b>Communication</b>: a course forum and one hour of online office hours per week.","<b>Support for beginners</b>: step-by-step installation guide in week 2, a peer \"tutor\" for students who struggle."],
+  hRes:"Free resources",
+  res:["Official Python documentation (python.org)","QGIS: documentation and tutorials at qgis.org","ObsPy: tutorials at docs.obspy.org","Git and GitHub: the \"GitHub Skills\" guide","Open data: USGS earthquake catalogue, Natural Earth, IRIS portal"],
+  resNote:"Check the exact links before the course starts.",
+  sign:"Department of Geophysics – Dr. Bouraoui Seyfallah", license:"Course released under a free licence – adapt it and share it."
+},
+ar:{
+  dir:"rtl", lang:"ar", docTitle:"البرمجيات الحرة ومفتوحة المصدر – السنة الأولى جيوفيزياء",
+  dept:"قسم الجيوفيزياء", author:"د. بوراوي سيف الله",
+  title:"البرمجيات الحرة ومفتوحة المصدر",
+  subtitle:"دروس عن بعد – السنة الأولى جيوفيزياء – 8 أسابيع، حوالي 4 ساعات في الأسبوع",
+  tabs:["العرض","الحصص","الأدوات","التقييم","اختبار","التنظيم"],
+  hPres:"تقديم المقياس",
+  presIntro:"يعلّم هذا المقياس طلبة السنة الأولى جيوفيزياء العمل بالبرمجيات الحرة، من تثبيت الأداة إلى معالجة مجموعة بسيطة من البيانات الجيوفيزيائية. لا يتطلب أي معرفة سابقة بالبرمجة.",
+  presTable:[["المدة","8 أسابيع: ساعة واحدة مباشرة عبر الفيديو + 3 ساعات عمل شخصي في الأسبوع"],["النمط","مؤتمرات مرئية، منصة المقياس (Moodle أو Google Classroom)، منتدى للأسئلة"],["العتاد","حاسوب (Windows أو macOS أو Linux)، ذاكرة 4 غيغابايت على الأقل، اتصال بالإنترنت"],["اللغات","الفرنسية والإنجليزية والعربية"]],
+  hObj:"أهداف التعلّم",
+  obj:["شرح معنى البرمجيات الحرة ومفتوحة المصدر والتمييز بين أهم التراخيص (GPL وMIT وCreative Commons).","تثبيت واستعمال أدوات حرة للمكتبية وإدارة المراجع (LibreOffice وZotero).","معالجة البيانات باستعمال Python وJupyter (قراءة ملف، حساب، رسم بياني).","عرض البيانات الجغرافية والجيوفيزيائية باستعمال QGIS.","استعمال Git وGitHub لحفظ العمل ومشاركته.","الاستشهاد الصحيح بالشيفرات والبيانات الحرة وإعادة استعمالها."],
+  hProg:"تقدّمك",
+  progress:(n,t)=>`${n} من ${t} حصص مكتملة`,
+  hPlan:"برنامج الحصص الثماني",
+  planHint:"انقر على الحصة لعرض تفاصيلها، ثم ضع علامة عليها عند إنهائها. يُحفظ تقدّمك في متصفحك.",
+  toRender:"المطلوب تسليمه:", done:"الحصة مكتملة",
+  hTrame:"سير الحصة المباشرة (ساعة واحدة)",
+  trame:"10 دقائق للمراجعة والأسئلة، 30 دقيقة لعرض تطبيقي مباشر، 15 دقيقة لتمرين موجَّه في مجموعات صغيرة، 5 دقائق لتعليمات الأسبوع. تُسجَّل كل حصة وتُنشر على الإنترنت.",
+  weeks:[
+   {t:"فهم البرمجيات الحرة",c:"الحريات الأربع للبرمجيات الحرة، التاريخ (GNU وLinux)، المصدر المفتوح مقابل البرمجيات المملوكة، التراخيص (GPL وMIT وCreative Commons)، أمثلة من علوم الأرض.",o:["المتصفح","منتدى المقياس"],a:"اختبار قصير + بطاقة موجزة: اختيار برنامج حر وتلخيص رخصته."},
+   {t:"بيئة عمل حرة",c:"تثبيت بيئة العمل وإعدادها، اكتشاف Linux (آلة افتراضية أو WSL)، مفاهيم الملفات والطرفية.",o:["VirtualBox أو WSL","LibreOffice","Zotero"],a:"تقرير من صفحة واحدة بـ LibreOffice مع 3 مراجع في Zotero."},
+   {t:"Python: الخطوات الأولى",c:"المتغيرات، القوائم، الحلقات، الدوال، قراءة ملف نصي.",o:["Python","Jupyter Notebook","Google Colab"],a:"دفتر Jupyter: إحصاءات بسيطة على ملف درجات حرارة أو قدرات زلزالية."},
+   {t:"تحليل البيانات والرسوم البيانية",c:"جداول البيانات، رسم المنحنيات، المدرّجات التكرارية، التنسيق.",o:["NumPy","Pandas","Matplotlib"],a:"رسم مقطع لبيانات جيوفيزيائية (جاذبية أو طبوغرافيا)."},
+   {t:"الخرائط ونظم المعلومات الجغرافية",c:"الإحداثيات والإسقاطات، استيراد الطبقات، خرائط الزلازل والمواقع.",o:["QGIS","Natural Earth","USGS"],a:"خريطة النشاط الزلزالي لشمال الجزائر انطلاقًا من كتالوج حر."},
+   {t:"علم الزلازل الحر",c:"قراءة أثر زلزالي، التصفية، تحديد وصول الموجتين P وS.",o:["ObsPy","SeisComP (عرض تقديمي)"],a:"معالجة تسجيل زلزالي عمومي وتحديد الأطوار."},
+   {t:"العمل الجماعي",c:"التحكم في الإصدارات بـ Git، مستودع GitHub، رخصة المشروع، قواعد الاستشهاد.",o:["Git","GitHub أو GitLab"],a:"مستودع GitHub للمشروع المصغّر مع ملف README ورخصة."},
+   {t:"المشروع المصغّر والحصيلة",c:"عرض شفهي للمشروع المصغّر، ملاحظات الزملاء، آفاق (العلم المفتوح، البيانات المفتوحة).",o:["كل ما سبق"],a:"المشروع المصغّر النهائي وعرض من 5 دقائق."}
+  ],
+  hTools:"الأدوات الحرة الموصى بها", searchPh:"ابحث عن أداة (مثلًا: خريطة، Python، علم الزلازل)",
+  replaces:"بديل لـ:", noTool:"لا توجد أداة مطابقة.",
+  toolsNote:"أدوات الجيوفيزياء المتقدمة (SimPEG وHarmonica وGMT) تُعرض في حصص تطبيقية فقط.",
+  tools:[
+   ["LibreOffice","برامج مكتبية","Microsoft Office"],["Zotero","إدارة المراجع","EndNote"],
+   ["Python + Jupyter","البرمجة والحساب","MATLAB (استعمال أساسي)"],["NumPy, Pandas, Matplotlib","البيانات والرسوم البيانية","Excel, Origin"],
+   ["QGIS","نظام المعلومات الجغرافية والخرائط","ArcGIS"],["ObsPy, SeisComP","علم الزلازل","برامج تجارية لمعالجة البيانات الزلزالية"],
+   ["GMT / PyGMT","الخرائط والأشكال العلمية","Surfer"],["SimPEG, Harmonica","الجاذبية والمغناطيسية (Python)","Oasis montaj"],
+   ["Git, GitHub, GitLab","إدارة الإصدارات ومشاركة الشيفرة","المجلدات المشتركة"],["LaTeX / Overleaf","الكتابة العلمية","Word للمعادلات"]
+  ],
+  hEval:"التقييم وسلّم التنقيط", calcHint:"أدخل نقاطك (من 20 لكل عنصر) لتقدير علامتك النهائية.",
+  gradeItems:["الاختبارات والتمارين الأسبوعية","المشاركة","المشروع المصغّر النهائي","العرض الشفهي"],
+  points:"نقاط", finalLabel:"العلامة النهائية المقدّرة",
+  hProj:"المشروع المصغّر: مثال على موضوع",
+  proj:"تحميل كتالوج زلازل منطقة ما من موقع USGS، ورسم التوزيع حسب القدر والعمق، وإنجاز خريطة بـ QGIS، ثم رفع كل ذلك إلى GitHub مع ملف README ورخصة من اختيارك.",
+  hRules:"القواعد",
+  rules:"العمل فردي، أو ثنائي في المشروع المصغّر. يجب الاستشهاد بكل شيفرة أو بيانات يُعاد استعمالها. يُقبل التسليم المتأخر لمدة 48 ساعة دون عقوبة إذا أعلم الطالب بذلك في المنتدى.",
+  hQuiz:"اختبار الأسبوع الأول", qOf:(i,n)=>`السؤال ${i} من ${n}`, next:"التالي", finished:"انتهى",
+  yourScore:"نتيجتك:", again:"إعادة المحاولة",
+  quiz:[
+   {q:"أي من هذه الحريات تُعدّ من الحريات الأربع للبرمجيات الحرة؟",o:["استعمال البرنامج مجانًا فقط","دراسة الشيفرة المصدرية وتعديلها","بيع البرنامج دون ذكر المؤلف","منع الآخرين من نسخه"],a:1,e:"يجب أن تكون الشيفرة المصدرية متاحة ليتم دراستها وتعديلها."},
+   {q:"أي رخصة تسمح بإعادة الاستعمال بحرية واسعة مع ذكر المؤلف فقط؟",o:["رخصة MIT","رخصة مملوكة","جميع الحقوق محفوظة","رخصة تجريبية"],a:0,e:"رخصة MIT متساهلة جدًا."},
+   {q:"يُستعمل QGIS أساسًا من أجل:",o:["كتابة الوثائق","عرض البيانات الجغرافية وتحليلها","ضغط الفيديو","إدارة البريد الإلكتروني"],a:1,e:"QGIS نظام معلومات جغرافية حر."},
+   {q:"\"المصدر المفتوح\" يعني أن:",o:["البرنامج مجاني دائمًا","الشيفرة المصدرية متاحة للاطلاع وفق رخصة","البرنامج بلا مؤلف","تعديله ممنوع"],a:1,e:"المجاني ليس مرادفًا للمصدر المفتوح: الرخصة هي المعيار."}
+  ],
+  hOrg:"التنظيم عن بعد والمراجع",
+  org:["<b>المنصة</b>: فضاء واحد للمقياس (Moodle، أو Google Classroom عند الاقتضاء) يضم الجدول الزمني والمحتويات وتسليم الأعمال.","<b>المؤتمرات المرئية</b>: Google Meet أو Zoom أو BigBlueButton (حر)، وتُسجَّل الحصص وتُنشر خلال 24 ساعة.","<b>الاتصال الضعيف</b>: ملفات PDF خفيفة، ودفاتر قابلة للتحميل، واستعمال Google Colab لتفادي التثبيتات الثقيلة.","<b>التواصل</b>: منتدى للمقياس وساعة مداومة إلكترونية أسبوعيًا.","<b>مساعدة المبتدئين</b>: دليل تثبيت خطوة بخطوة في الأسبوع الثاني، وزميل «مرشد» لكل طالب يواجه صعوبة."],
+  hRes:"مراجع مجانية",
+  res:["التوثيق الرسمي للغة Python (python.org)","QGIS: التوثيق والدروس على qgis.org","ObsPy: دروس على docs.obspy.org","Git وGitHub: دليل «GitHub Skills»","بيانات مفتوحة: كتالوج زلازل USGS، وNatural Earth، وبوابة IRIS"],
+  resNote:"يُرجى التحقق من الروابط الدقيقة قبل بداية المقياس.",
+  sign:"قسم الجيوفيزياء – د. بوراوي سيف الله", license:"المقياس تحت رخصة حرة – يمكن تكييفه ومشاركته."
+}
+};
+const GRADE_POINTS = [8,2,8,2];
+
+/* ======================= Utilitaires ======================= */
+const $ = s => document.querySelector(s);
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+let lang = store.get("lang", null) || ((navigator.language||"fr").slice(0,2));
+if(!I18N[lang]) lang = "fr";
+let done = store.get("done", []);
+const grades = store.get("notes", {});
+let currentTab = "presentation";
+let qi = 0, score = 0;
+
+const TAB_IDS = ["presentation","seances","outils","evaluation","quiz","organisation"];
+
+/* ======================= Rendu ======================= */
+function render(){
+  const T = I18N[lang];
+  document.documentElement.lang = T.lang;
+  document.documentElement.dir = T.dir;
+  document.title = T.docTitle;
+  document.querySelectorAll("#langs button").forEach(b => b.classList.toggle("active", b.dataset.l === lang));
+
+  $("#dept").textContent = T.dept; $("#author").textContent = T.author;
+  $("#title").textContent = T.title; $("#subtitle").textContent = T.subtitle;
+
+  // onglets
+  const tabsEl = $("#tabs"); tabsEl.innerHTML = "";
+  TAB_IDS.forEach((id,i) => {
+    const b = document.createElement("button");
+    b.textContent = T.tabs[i]; b.dataset.id = id;
+    b.onclick = () => show(id);
+    tabsEl.appendChild(b);
+  });
+
+  // présentation
+  $("#h-pres").textContent = T.hPres; $("#pres-intro").textContent = T.presIntro;
+  $("#pres-table").innerHTML = T.presTable.map(r => `<tr><th>${esc(r[0])}</th><td>${esc(r[1])}</td></tr>`).join("");
+  $("#h-obj").textContent = T.hObj;
+  $("#objectifs").innerHTML = T.obj.map(x => `<li>${esc(x)}</li>`).join("");
+  $("#h-prog").textContent = T.hProg;
+
+  // séances
+  $("#h-plan").textContent = T.hPlan; $("#plan-hint").textContent = T.planHint;
+  $("#h-trame").textContent = T.hTrame; $("#trame").textContent = T.trame;
+  const weeksEl = $("#weeks"); weeksEl.innerHTML = "";
+  T.weeks.forEach((s,i) => {
+    const d = document.createElement("details");
+    d.className = "week" + (done.includes(i) ? " done" : "");
+    d.innerHTML = `
+      <summary><span class="num">${i+1}</span><h3>${esc(s.t)}</h3></summary>
+      <div class="body">
+        <p>${esc(s.c)}</p>
+        <p>${s.o.map(x => `<span class="tag">${esc(x)}</span>`).join("")}</p>
+        <p><b>${esc(T.toRender)}</b> ${esc(s.a)}</p>
+        <label class="check"><input type="checkbox" ${done.includes(i) ? "checked" : ""}> ${esc(T.done)}</label>
+      </div>`;
+    d.querySelector("input").onchange = e => {
+      done = e.target.checked ? [...new Set([...done, i])] : done.filter(x => x !== i);
+      d.classList.toggle("done", e.target.checked);
+      store.set("done", done); updateProgress();
+    };
+    weeksEl.appendChild(d);
+  });
+  updateProgress();
+
+  // outils
+  $("#h-tools").textContent = T.hTools; $("#search").placeholder = T.searchPh;
+  $("#tools-note").textContent = T.toolsNote;
+  renderTools($("#search").value);
+
+  // évaluation
+  $("#h-eval").textContent = T.hEval; $("#calc-hint").textContent = T.calcHint;
+  $("#final-label").textContent = T.finalLabel;
+  const calc = $("#calc"); calc.innerHTML = "";
+  T.gradeItems.forEach((name,i) => {
+    const row = document.createElement("div"); row.className = "calc-row";
+    row.innerHTML = `<span>${esc(name)} <small class="note">(${GRADE_POINTS[i]} ${esc(T.points)})</small></span>
+      <input type="number" min="0" max="20" step="0.25" value="${grades[i] ?? ""}" placeholder="/20">`;
+    row.querySelector("input").oninput = e => { grades[i] = e.target.value; store.set("notes", grades); compute(); };
+    calc.appendChild(row);
+  });
+  compute();
+  $("#h-proj").textContent = T.hProj; $("#proj").textContent = T.proj;
+  $("#h-rules").textContent = T.hRules; $("#rules").textContent = T.rules;
+
+  // quiz
+  $("#h-quiz").textContent = T.hQuiz; renderQuiz();
+
+  // organisation
+  $("#h-org").textContent = T.hOrg;
+  $("#org-list").innerHTML = T.org.map(x => `<li>${x}</li>`).join("");
+  $("#h-res").textContent = T.hRes;
+  $("#res-list").innerHTML = T.res.map(x => `<li>${esc(x)}</li>`).join("");
+  $("#res-note").textContent = T.resNote;
+
+  // signature
+  $("#sign").innerHTML = `<b>${esc(T.sign)}</b>`;
+  $("#license").textContent = T.license;
+
+  show(currentTab, false);
+}
+
+function show(id, scroll = true){
+  currentTab = id;
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("active", s.id === id));
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+  if(scroll) window.scrollTo({top:0});
+  try{ history.replaceState(null,"","#"+id); }catch(e){}
+}
+
+function updateProgress(){
+  const T = I18N[lang], n = done.length, tot = T.weeks.length;
+  $("#progress-text").textContent = T.progress(n, tot);
+  $("#progress-bar").style.width = (n/tot*100) + "%";
+}
+
+function renderTools(filter = ""){
+  const T = I18N[lang], f = filter.toLowerCase(), box = $("#tools");
+  box.innerHTML = "";
+  T.tools.filter(o => o.join(" ").toLowerCase().includes(f)).forEach(o => {
+    const el = document.createElement("div"); el.className = "tool";
+    el.innerHTML = `<b>${esc(o[0])}</b><div>${esc(o[1])}</div><small>${esc(T.replaces)} ${esc(o[2])}</small>`;
+    box.appendChild(el);
+  });
+  if(!box.children.length) box.innerHTML = `<p class="note">${esc(T.noTool)}</p>`;
+}
+
+function compute(){
+  let total = 0;
+  GRADE_POINTS.forEach((p,i) => {
+    const v = Math.min(20, Math.max(0, parseFloat(grades[i]) || 0));
+    total += v/20 * p;
+  });
+  $("#final").textContent = total.toFixed(2) + " / 20";
+}
+
+function renderQuiz(){
+  const T = I18N[lang], box = $("#quizbox"), Q = T.quiz;
+  if(qi >= Q.length){
+    box.innerHTML = `<h3>${esc(T.finished)}</h3><p>${esc(T.yourScore)} <b>${score} / ${Q.length}</b></p><button class="btn" id="again">${esc(T.again)}</button>`;
+    $("#again").onclick = () => { qi = 0; score = 0; renderQuiz(); };
+    return;
+  }
+  const q = Q[qi];
+  box.innerHTML = `<p class="note">${esc(T.qOf(qi+1, Q.length))}</p><h3>${esc(q.q)}</h3>`;
+  q.o.forEach((txt, idx) => {
+    const b = document.createElement("button"); b.className = "opt"; b.textContent = txt;
+    b.onclick = () => {
+      box.querySelectorAll(".opt").forEach((x,j) => { x.disabled = true; if(j === q.a) x.classList.add("ok"); });
+      if(idx === q.a) score++; else b.classList.add("ko");
+      const p = document.createElement("p"); p.textContent = q.e; box.appendChild(p);
+      const n = document.createElement("button"); n.className = "btn"; n.textContent = T.next;
+      n.onclick = () => { qi++; renderQuiz(); }; box.appendChild(n);
+    };
+    box.appendChild(b);
+  });
+}
+
+/* ======================= Démarrage ======================= */
+document.querySelectorAll("#langs button").forEach(b => {
+  b.onclick = () => { lang = b.dataset.l; store.set("lang", lang); qi = 0; score = 0; render(); };
+});
+$("#search").oninput = e => renderTools(e.target.value);
+const hash = (location.hash || "").slice(1);
+if(TAB_IDS.includes(hash)) currentTab = hash;
+render();
+</script>
+</body>
+</html>
